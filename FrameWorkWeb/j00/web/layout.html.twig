@@ -1,0 +1,48 @@
+{# app/Resources/views/layout.html.twig #}
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>{% block title %}Framework Web 1{% endblock %}</title>
+    {% block stylesheets %}
+      <link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}" type="text/css" />
+    {% endblock %}
+  </head>
+  <body>
+    <div class="container">
+      <div id="header" class="hero-unit">
+        <h1>Framework Web 1</h1>
+        <p>First project with Symfony.</p>
+        <p><a class="btn btn-primary btn-large" href="https://intra.42.fr/module/2013/WEB-1-002/PAR-2-1/acti-481/project/">
+          Go intra »
+        </a></p>
+      </div>
+      <div class="row">
+        <div id="menu" class="span3">
+          <h3>Menu</h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="{{ path('atipex_start') }}">Homepage</a></li>
+            <li><a href="{{ path('atipex_login') }}">Login</a></li>
+            <li><a href="{{ path('atipex_subscribe') }}">Register</a></li>
+            <li><a href="{{ path('atipex_lost') }}">Password lost</a></li>
+            </ul>
+            {{render(controller("atipexBundle:Atipex:menu")) }}
+        </div>
+        <div id="content" class="span9">
+          {% block body %}
+          {% endblock %}
+        </div>
+      </div>
+      <hr>
+      <footer>
+        <p>mrebours © 2014 </p>
+      </footer>
+    </div>
+  {% block javascripts %}
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script type="text/javascript" src="{{ asset('js/bootstrap.js') }}"></script>
+  {% endblock %}
+
+  </body>
+</html>

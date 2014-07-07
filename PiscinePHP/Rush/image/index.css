@@ -1,0 +1,13 @@
+#block{
+	height: 400px;
+	width: 500px;
+	background-color: #2E64FE;
+	position: relative;
+	left: 388px;
+	margin-top: 122px;
+	box-shadow: 10px 10px 10px black;
+	border-radius: 0px 141px 0px 141px;
+	border-style: inset;
+	border-width: 5px;
+	border-color: blue;
+}

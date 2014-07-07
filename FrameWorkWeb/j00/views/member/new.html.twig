@@ -1,0 +1,20 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+     {% if app.session.get('admin') is empty %}
+     	<a  align="center" href="{{ path('atipex_start') }}"> BACK</a>
+     {% else %}
+    <h1>member creation</h1>
+
+    {{ form(form) }}
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('admin') }}">
+            Back to the list
+        </a>
+    </li>
+</ul>
+<a  align="center" href="{{ path('atipex_alogout') }}"> DELOG HERE</a>
+{% endif %}
+{% endblock %}

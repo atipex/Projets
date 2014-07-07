@@ -1,0 +1,7 @@
+parameters:
+#    atipex.example.class: atipex\Bundle\Example
+
+services:
+#    atipex.example:
+#        class: %atipex.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]

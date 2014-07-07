@@ -1,0 +1,21 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+
+{% if app.session.get('admin') == 'on' %}
+	<a  align="center" href="{{ path('atipex_start') }}">  {% if app.session.get('langue') is empty %}Back{% else %}Retour{% endif %}</a>
+	{% else %}
+    <h1> {% if app.session.get('langue') is empty %}Member edit{% else %}Edition des membres{% endif %}</h1>
+
+    {{ form(edit_form) }}
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('admin') }}">
+ {% if app.session.get('langue') is empty %}Back to the list{% else %}Retour à la liste{% endif %}        </a>
+    </li>
+    <li>{{ form(delete_form) }}</li>
+</ul>
+<a  align="center" href="{{ path('atipex_alogout') }}"> {% if app.session.get('langue') is empty %}Delog here{% else %}Se déconnecter{% endif %}</a>
+ {% endif %}
+{% endblock %}

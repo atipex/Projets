@@ -1,0 +1,23 @@
+Features
+
+	Termcaps prompt		Left / Right arrows allow you to edit your cmd
+		 		Up / Down arrows show previous cmd
+				CTRL-D exits
+				CTRL-L clears the screen
+				CTRL-C aff a new prompt
+				Tab autocompletion
+
+	History			history cmd aff history
+				history -c remove history
+				!! !n !-n and !str available
+
+	Quotes			cmd "str of args"
+
+	Globing			Use regex in your cmd
+
+	Background		cmd & run cmd in background
+
+	variable		set, unset, $var
+
+	Alias			set alias
+

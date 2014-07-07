@@ -1,0 +1,62 @@
+{% extends "atipexBundle::layout.html.twig" %}
+{% block title %}
+Register - {{ parent() }}
+{% endblock %}
+
+{% block Atipex_body %}
+<form class="form-horizontal" method="POST" action="add">
+<fieldset>
+<legend>
+
+ {% if app.session.get('langue') is empty %}
+            Register
+           {% else %}
+            S'enregistrer
+  {% endif %}</legend>
+<div class="control-group">
+  <label class="control-label" for="mail">E-mail</label>
+  <div class="controls">
+    <input id="mail" name="mail" placeholder="Email" class="input-medium" type="text">
+  </div>
+</div>
+<div class="control-group">
+  <label class="control-label" for="Login">Login</label>
+  <div class="controls">
+    <input id="Login" name="Login" placeholder="Login" class="input-medium" type="text">
+  </div>
+</div>
+<div class="control-group">
+  <label class="control-label" for="Password">{% if app.session.get('langue') is empty %}Password{% else %}Mot de passe{% endif %}</label>
+  <div class="controls">
+    <input id="Password" name="Password" placeholder="{% if app.session.get('langue') is empty %}Password{% else %}Mot de passe{% endif %}" class="input-medium" type="password">
+  </div>
+</div>
+<div class="control-group">
+  <label class="control-label" for="Password2">{% if app.session.get('langue') is empty %}Confirm password{% else %}Confirmation mot de passe{% endif %}</label>
+  <div class="controls">
+    <input id="Password2" name="Password2" placeholder="{% if app.session.get('langue') is empty %}Password{% else %}Mot de passe{% endif %}" class="input-medium" type="password">
+  </div>
+</div>
+<div class="control-group">
+  <label class="control-label" for="radios"> {% if app.session.get('langue') is empty %}Language{% else %}Langue{% endif %}</label>
+  <div class="controls">
+    <label class="radio inline" for="radios-0">
+      <input name="radios" id="radios-0" value="EN" checked="checked" type="radio">
+      EN
+    </label>
+    <label class="radio inline" for="radios-1">
+      <input name="radios" id="radios-1" value="FR" type="radio">
+      FR
+    </label>
+  </div>
+</div>
+  <div class="control-group">
+  <label class="control-label" for="submit"></label>
+  <div class="controls">
+    <button id="submit" name="submit" class="btn btn-primary"> {% if app.session.get('langue') is empty %}Submit{% else %}Envoyer{% endif %}</button>
+    <button id="reset" name="reset" type="reset" class="btn btn-inverse">Reset</button>
+  </div>
+</div>
+</fieldset>
+</form>
+{% endblock %}

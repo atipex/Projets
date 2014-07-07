@@ -1,0 +1,67 @@
+atipex_start:
+    pattern: /
+    defaults: { _controller:atipexBundle:Atipex:start}
+
+atipex_index:
+    pattern: /index
+    defaults: { _controller:atipexBundle:Atipex:start}
+
+atipex_subscribe:
+    path: /subscribe
+    defaults: { _controller:atipexBundle:Atipex:subscribe}
+
+atipex_login:
+    path: /login
+    defaults: { _controller:atipexBundle:Atipex:login}
+
+atipex_lost:
+    path: /lost
+    defaults: { _controller:atipexBundle:Atipex:lost}
+
+atipex_addn:
+    path: /addn
+    defaults: { _controller:atipexBundle:Atipex:addn}
+
+atipex_modifa:
+    path: /modifa
+    defaults: { _controller:atipexBundle:Atipex:modifa}
+
+atipex_modif:
+    path: /modif
+    defaults: { _controller:atipexBundle:Atipex:modif}
+
+atipex_logadmin:
+    path: /alogin
+    defaults: { _controller:atipexBundle:Atipex:logadmin}
+
+atipex_logout:
+    path: /logout
+    defaults: { _controller:atipexBundle:Atipex:logout}
+
+atipex_alogout:
+    path: /logouta
+    defaults: { _controller:atipexBundle:Atipex:logouta}
+
+atipex_amail:
+    path: /amail
+    defaults: { _controller:atipexBundle:Atipex:mail}
+
+atipex_add:
+    path: /add
+    defaults: { _controller:atipexBundle:Atipex:add}
+
+atipex_auth:
+    path: /auth
+    defaults: { _controller:atipexBundle:Atipex:auth}
+
+atipex_autha:
+    path: /autha
+    defaults: { _controller:atipexBundle:Atipex:autha}
+
+atipex_valid:
+    path: /validm
+    defaults: { _controller:atipexBundle:Atipex:validm}
+
+atipexBundle_admin:
+    resource: "@atipexBundle/Resources/config/routing/member.yml"
+    prefix:   /admin

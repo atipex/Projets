@@ -1,0 +1,1 @@
+SELECT film.id_genre,genre.nom AS 'nom genre',film.id_distrib,distrib.nom AS 'nom distrib',film.titre AS 'titre film' FROM film,genre,distrib WHERE film.id_genre >= 4 AND film.id_genre <= 8 AND film.id_genre = genre.id_genre AND film.id_distrib = distrib.id_distrib;

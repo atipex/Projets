@@ -1,0 +1,15 @@
+<- Vertex ------------------------------------------------------------------------------
+
+The Vertex class handles Coords numbers.
+
+An instance can be construted from x, y and z value:
+new Vertex( array( 'x' => 0.0, 'y' => 0.0, 'z'=> 0.0 ) );
+
+Or with optional variable color and w:
+new Vertex( array( 'x' => 0.0, 'y' => 0.0, 'z'=> 0.0, 'w'=> 0.0, 'color' => $collor ) );
+
+X, y, z and w are converted to float.
+W is set as 1.0 by default;
+Color is set as white by default.
+Negative values are left as is.
+------------------------------------------------------------------------------ Vertex ->

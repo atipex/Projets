@@ -1,0 +1,45 @@
+#block{
+	height: 400px;
+	width: 500px;
+	background-color: #2E64FE;
+	position: relative;
+	left: 388px;
+	margin-top: 122px;
+	box-shadow: 10px 10px 10px black;
+	border-radius: 0px 141px 0px 141px;
+	border-style: inset;
+	border-width: 5px;
+	border-color: blue;
+}
+#link, a:visited
+{
+	font-size: 30px;
+	font-family: fantasy;
+	color: #5882fa;
+	text-shadow: 1px 3px 2px black;
+	font-style: oblique;
+	position: absolute;
+	top: 11px;
+	left:1245px;
+}
+#block3
+{
+	height: 100px;
+	width: 100px;
+	background-color: #2E64FE;
+	left:1235px;
+	top:5px;
+	position: absolute;
+	border: 5px double blue;
+	border-radius: 30px 30px 30px 00px;
+}
+#link1, a:visited{
+	font-size: 30px;
+	font-family: fantasy;
+	color: rgb(88, 130, 250);
+	text-shadow: 1px 3px 2px black;
+	font-style: oblique;
+	position: absolute;
+	top: 120px;
+	left:1135px;
+}

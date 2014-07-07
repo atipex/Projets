@@ -1,0 +1,998 @@
+#include "wolf.h"
+
+int	ft_strcmp(char *s1, char *s2)
+{
+	return ((*s1 == *s2 && *s1) ? (ft_strcmp(++s1, ++s2)) : (*s1 - *s2));
+}
+
+int	is_usage(int argc, char *str)
+{
+	if (argc == 1 || ft_strcmp(str, "--help") == 0)
+	{
+		ft_putstr("usage: ./wolf3d [--help] map\n\n");
+		ft_putstr("\t--help  print this message\n\n");
+		ft_putstr("\tArrow up    -> move up\n");
+		ft_putstr("\tArrow down  -> move down\n");
+		ft_putstr("\tArrow left  -> turn left\n");
+		ft_putstr("\tArrow right -> turn right\n");
+		return (1);
+	}
+	return (0);
+}
+
+int	is_good_map(t_infos_mlx *infos_mlx, int **map)
+{
+	int	i;
+	int	j;
+	int	max_x;
+	int	is_zero;
+
+	j = 0;
+	is_zero = 0;
+	max_x = infos_mlx->env->size_x;
+	while (map[j])
+	{
+		i = 0;
+		while (i < max_x)
+		{
+			if (map[j][i] == 0)
+				is_zero += 1;
+			i = i + 1;
+		}
+		j = j + 1;
+	}
+	if ((max_x < (int)X_START || infos_mlx->env->size_y < (int)Y_START)
+			|| map[(int)Y_START][(int)X_START] == 1)
+		return (FAILED);
+	return ((is_zero > 0) ? (1) : (FAILED));
+}
+#include <stdlib.h>
+#include "wolf.h"
+
+void	my_exit(t_infos_mlx *infos_mlx)
+{
+	free_map(infos_mlx->env->map);
+	free_func(infos_mlx->env->list_func);
+	free(infos_mlx->env);
+	free(infos_mlx);
+	exit(42);
+}
+
+void	head_left(t_infos_mlx *infos_mlx)
+{
+	infos_mlx->env->angle = infos_mlx->env->angle
+		+ GET_ROT(infos_mlx->env->rot_speed);
+	(infos_mlx->env->angle == 360) ? (infos_mlx->env->angle = 0) : (0);
+	disp_img(infos_mlx, infos_mlx->env->map, infos_mlx->env);
+	manage_expose(infos_mlx);
+}
+
+void	head_right(t_infos_mlx *infos_mlx)
+{
+	infos_mlx->env->angle = infos_mlx->env->angle
+		- GET_ROT(infos_mlx->env->rot_speed);
+	(infos_mlx->env->angle < 0) ? (infos_mlx->env->angle = 359) : (0);
+	disp_img(infos_mlx, infos_mlx->env->map, infos_mlx->env);
+	manage_expose(infos_mlx);
+}
+
+void	move_up(t_infos_mlx *infos_mlx)
+{
+	float	tmp_x;
+	float	tmp_y;
+	float	speed;
+
+	speed = GET_WALK(infos_mlx->env->walk_speed);
+	tmp_x = infos_mlx->env->x + speed * cos(RAD(infos_mlx->env->angle));
+	tmp_y = infos_mlx->env->y + speed * sin(RAD(infos_mlx->env->angle));
+	if (infos_mlx->env->map[(int)tmp_y][(int)tmp_x] == 1)
+		return ;
+	else
+	{
+		infos_mlx->env->x = tmp_x;
+		infos_mlx->env->y = tmp_y;
+		disp_img(infos_mlx, infos_mlx->env->map, infos_mlx->env);
+		manage_expose(infos_mlx);
+	}
+}
+
+void	move_down(t_infos_mlx *infos_mlx)
+{
+	float	tmp_x;
+	float	tmp_y;
+	float	speed;
+
+	speed = GET_WALK(infos_mlx->env->walk_speed);
+	tmp_x = infos_mlx->env->x - speed * cos(RAD(infos_mlx->env->angle));
+	tmp_y = infos_mlx->env->y - speed * sin(RAD(infos_mlx->env->angle));
+	if (infos_mlx->env->map[(int)tmp_y][(int)tmp_x] == 1)
+		return ;
+	else
+	{
+		infos_mlx->env->x = tmp_x;
+		infos_mlx->env->y = tmp_y;
+		disp_img(infos_mlx, infos_mlx->env->map, infos_mlx->env);
+		manage_expose(infos_mlx);
+	}
+}
+/*
+** event_walk.c for w3d in /home/sebastien/travaux/Wolf3d
+**
+** Made by sebastien
+** Login   <sebastien@epitech.net>
+**
+** Started on  Sat Jan 11 14:02:01 2014 sebastien
+** Last update Sat Jan 11 16:00:40 2014 sebastien
+*/
+
+#include "wolf.h"
+
+void	speed_up(t_infos_mlx *infos_mlx)
+{
+  if (infos_mlx->env->walk_speed + 1 < 6)
+  {
+    infos_mlx->env->walk_speed += 1;
+    manage_expose(infos_mlx);
+  }
+}
+
+void	speed_down(t_infos_mlx *infos_mlx)
+{
+  if (infos_mlx->env->walk_speed - 1 > 0)
+  {
+    infos_mlx->env->walk_speed -= 1;
+    manage_expose(infos_mlx);
+  }
+}
+#include <unistd.h>
+#include <stdlib.h>
+#include "mlx.h"
+#include "wolf.h"
+
+void		put_rot(t_infos_mlx *infos_mlx)
+{
+	char		speed[5];
+
+	speed[4] = 0;
+	speed[0] = '0' + (infos_mlx->env->rot_speed / 10);
+	speed[1] = '.';
+	speed[2] = '0' + (infos_mlx->env->rot_speed % 10);
+	speed[3] = 'x';
+	mlx_string_put(infos_mlx->mlx_ptr, infos_mlx->win_ptr,
+			(WIDTH - 170), (HEIGHT - 30),
+			COLOR_STRINGS, "Rotation speed :");
+	mlx_string_put(infos_mlx->mlx_ptr, infos_mlx->win_ptr,
+			(WIDTH - 45),(HEIGHT - 30), COLOR_STRINGS, speed);
+}
+
+void		put_walk(t_infos_mlx *infos_mlx)
+{
+	char		walk[2];
+
+	walk[1] = 0;
+	walk[0] = '0' + (infos_mlx->env->walk_speed);
+	mlx_string_put(infos_mlx->mlx_ptr, infos_mlx->win_ptr,
+			(WIDTH - 170), (HEIGHT - 15),
+			COLOR_STRINGS, "Walking speed     :");
+	mlx_string_put(infos_mlx->mlx_ptr, infos_mlx->win_ptr,
+			(WIDTH - 45), (HEIGHT - 15), COLOR_STRINGS, walk);
+}
+
+int		manage_expose(void *param)
+{
+	t_infos_mlx	*infos_mlx;
+
+	infos_mlx = param;
+	mlx_put_image_to_window(infos_mlx->mlx_ptr,
+			infos_mlx->win_ptr,
+			infos_mlx->img, 0, 0);
+	put_rot(infos_mlx);
+	put_walk(infos_mlx);
+	return (0);
+}
+
+static int	do_func(int keycode, t_functions *list_func,
+		t_infos_mlx *infos_mlx)
+{
+	void		(*func_ptr)(t_infos_mlx *infos_mlx);
+
+	while (list_func && keycode != list_func->keycode)
+		list_func = list_func->next;
+	if (list_func && list_func->keycode == keycode)
+	{
+		func_ptr = (list_func->func_ptr);
+		func_ptr(infos_mlx);
+	}
+	return (0);
+}
+
+int		manage_key(int keycode, t_infos_mlx *infos_mlx)
+{
+	do_func(keycode, infos_mlx->env->list_func, infos_mlx);
+	return (0);
+}
+#include <stdlib.h>
+#include <math.h>
+#include "mlx.h"
+#include "wolf.h"
+
+float	find_x(t_env *env , int **map, float x1, float y1)
+{
+	float	k;
+	int	new_x;
+	int	new_y;
+	int	i;
+	float	little;
+
+	i = 0;
+	little = WALL_NO_FOUND;
+	while (i < env->size_x)
+	{
+		k = ((i - env->x) / x1);
+		new_x = i;
+		new_y = env->y + (k * y1);
+		if (new_x != 0)
+		{
+			new_x = new_x - 1;
+			if (new_x >= (int)env->x)
+				new_x = new_x + 1;
+		}
+		if (k >= 0 && k < little && new_x < env->size_x && new_x >= 0 &&
+				new_y >= 0 && new_y < env->size_y && map[new_y][new_x] == 1)
+			little = k;
+		i = i + 1;
+	}
+	return (little);
+}
+
+float	find_y(t_env *env , int **map, float x1, float y1)
+{
+	float	k;
+	int	new_x;
+	int	new_y;
+	int	i;
+	float	little;
+
+	i = 0;
+	little = WALL_NO_FOUND;
+	while (i < env->size_y)
+	{
+		k = ((i - env->y) / y1);
+		new_x = env->x + (k * x1);
+		new_y = i;
+		if (new_y != 0)
+		{
+			new_y = new_y - 1;
+			if (new_y >= (int)env->y)
+				new_y = new_y + 1;
+		}
+		if (k >= 0 && k < little && new_x < env->size_x && new_y < env->size_y
+				&& new_y >= 0 && new_x >= 0 && (int)k >= 0 && map[new_y][new_x] == 1)
+			little = k;
+		i = i + 1;
+	}
+	return (little);
+}
+
+float	find_wall(t_env *env , int **map, float each_x, unsigned int *color)
+{
+	float	x1;
+	float	y1;
+	float	k_x;
+	float	k_y;
+	float	tmp;
+
+	x1 = env->x + 0.5;
+	y1 = env->y + each_x;
+	tmp = x1;
+	x1 = cos(RAD(env->angle)) * (tmp - env->x) - sin(RAD(env->angle))
+		* (y1 - env->y);
+	y1 = sin(RAD(env->angle)) * (tmp - env->x) + cos(RAD(env->angle))
+		* (y1 - env->y);
+	k_x = find_x(env, map, x1, y1);
+	k_y = find_y(env, map, x1, y1);
+	*color = 0;
+	(x1 > 0) ? (*color = FIRST_COLOR) : (*color = SECOND_COLOR);
+	(k_x > k_y) ? ((y1 > 0) ? (*color = THIRD_COLOR)
+			: (*color = FOURTH_COLOR)) : (0);
+	if (k_x > k_y)
+		return (k_y);
+	return (k_x);
+}
+#include <stdlib.h>
+#include "wolf.h"
+
+void		free_map(int **map)
+{
+	int		i;
+
+	i = 0;
+	while (map[i])
+	{
+		free(map[i]);
+		i = i + 1;
+	}
+}
+
+void		free_func(t_functions *list)
+{
+	t_functions	*tmp;
+
+	tmp = list;
+	while (list)
+	{
+		tmp = list->next;
+		free(list);
+		list = tmp;
+	}
+}
+
+#include <unistd.h>
+#include <stdlib.h>
+#include "get_next_line.h"
+
+static t_fd	*find_fd_or_create_it(t_fd **pile_fd, int fd)
+{
+	t_fd		*tmp;
+	t_fd		*new;
+
+	tmp = *pile_fd;
+	if (tmp && tmp->fd == fd)
+		return (tmp);
+	while (tmp && (tmp = tmp->next) != *pile_fd)
+		if (tmp->fd == fd)
+			return (tmp);
+	new = NULL;
+	if ((new = (t_fd*)malloc(sizeof(t_fd))) == NULL)
+		return (NULL);
+	new->str = NULL;
+	new->fd = fd;
+	if (*pile_fd)
+	{
+		new->next = *pile_fd;
+		tmp = *pile_fd;
+		while (tmp->next != *pile_fd)
+			tmp = tmp->next;
+		tmp->next = new;
+	}
+	else
+		new->next = new;
+	return (new);
+}
+
+static int	is_backslash_n(char *str)
+{
+	int		i;
+
+	i = 0;
+	if (str == NULL)
+		return (0);
+	while (str[i])
+	{
+		if (str[i] == '\n')
+			return (1);
+		i = i + 1;
+	}
+	return (0);
+}
+
+static int	add_str_to(char **dest, char *src)
+{
+	char		*tmp;
+	char		*tmp2;
+	int		i;
+	int		j;
+
+	i = 0;
+	j = 0;
+	src[BUF_SIZE] = '\0';
+	while (*dest && (*dest)[i])
+		i = i + 1;
+	while (src[j++]);
+	i = i + j;
+	if ((tmp = (char*)malloc(sizeof(char) * (i + 1))) == NULL)
+		return (1);
+	i = 0;
+	while (*dest && (*dest)[i])
+		tmp[i] = (*dest)[i++];
+	j = 0;
+	while (src[j])
+		tmp[i++] = src[j++];
+	tmp[i] = 0;
+	tmp2 = *dest;
+	*dest = tmp;
+	free(tmp2);
+	return (0);
+}
+
+static char	*return_it(char **str, char **to_return)
+{
+	int		i;
+	int		j;
+	char		*new_str;
+
+	i = 0;
+	j = 0;
+	while ((*str)[i] != '\n')
+		i = i + 1;
+	while ((*str)[i] && (*str)[i + j])
+		j = j + 1;
+	if ((*to_return = (char*)malloc(sizeof(char) * (i + 1))) == NULL)
+		return (NULL);
+	if ((new_str = (char*)malloc(sizeof(char) * (j + 1))) == NULL)
+		return (NULL);
+	(*to_return)[i] = 0;
+	i = 0 ;
+	while ((*str)[i] != '\n' && (*str)[i])
+		(*to_return)[i] = (*str)[i++];
+	new_str[j] = 0;
+	j = 0;
+	while ((*str)[++i])
+		new_str[j++] = (*str)[i];
+	new_str[j] = 0;
+	free(*str);
+	return (new_str);
+}
+
+char		*get_next_line(const int fd)
+{
+	static t_fd	*pile;
+	char		*str_tmp;
+	char		*to_return;
+	int		s_read;
+
+	if ((pile = find_fd_or_create_it(&pile, fd)) == NULL || BUF_SIZE <= 0)
+		return (NULL);
+	if ((str_tmp = (char*)malloc(sizeof(char) * (BUF_SIZE + 2))) == NULL)
+		return (NULL);
+	while (is_backslash_n(pile->str) == 0)
+	{
+		if ((s_read = read(fd, str_tmp, BUF_SIZE)) < 0)
+			return (NULL);
+		(s_read < BUF_SIZE) ? (str_tmp[s_read] = 0) : (0);
+		if (s_read < BUF_SIZE && str_tmp[CHECK_GNL(s_read)] != '\n')
+			str_tmp[s_read] = '\n';
+		if (s_read < BUF_SIZE && str_tmp[CHECK_GNL(s_read)] != '\n')
+			str_tmp[s_read + 1] = 0;
+		if (((add_str_to(&(pile->str), str_tmp)) > 0)
+				|| (s_read == 0 && pile->str[0] == '\n'))
+			return (NULL);
+	}
+	free(str_tmp);
+	pile->str = return_it(&(pile->str), &to_return);
+	return ((pile->str == NULL) ? (NULL) : (to_return));
+}
+#include <stdlib.h>
+#include "wolf.h"
+
+static t_functions	*create_func(int keycode,
+		void (*func_ptr)(t_infos_mlx *infos_mlx))
+{
+	t_functions		*new;
+
+	new = NULL;
+	if ((new = (t_functions*)malloc(sizeof(*new))))
+	{
+		new->keycode = keycode;
+		new->func_ptr = func_ptr;
+		new->next = NULL;
+	}
+	return (new);
+}
+
+static int	push_func(t_functions **list, int keycode,
+		void (*func_ptr)(t_infos_mlx *infos_mlx))
+{
+	t_functions	*tmp;
+
+	tmp = *list;
+	if (*list)
+	{
+		while (tmp->next)
+			tmp = tmp->next;
+		if ((tmp->next = create_func(keycode, func_ptr)))
+			return (0);
+	}
+	else
+		if ((*list = create_func(keycode, func_ptr)))
+			return (0);
+	ft_puterror(ALLOC_ERROR);
+	return (FAILED);
+}
+
+static int	get_keycode(int i)
+{
+	int		keycode;
+
+	keycode = 0;
+	(i == 0) ? (keycode = 65307) : (0);
+	(i == 1) ? (keycode = 65361) : (0);
+	(i == 2) ? (keycode = 65363) : (0);
+	(i == 3) ? (keycode = 65362) : (0);
+	(i == 4) ? (keycode = 65364) : (0);
+	(i == 5) ? (keycode = 119) : (0);
+	(i == 6) ? (keycode = 115) : (0);
+	(i == 7) ? (keycode = 114) : (0);
+	(i == 8) ? (keycode = 65451) : (0);
+	(i == 9) ? (keycode = 65453) : (0);
+	(i == 10) ? (keycode = 49) : (0);
+	(i == 11) ? (keycode = 50) : (0);
+	return (keycode);
+}
+
+static void	get_func(void (**func_ptr)(t_infos_mlx *infos_mlx), int i)
+{
+	(i == 0) ? (*func_ptr = &my_exit) : (0);
+	(i == 1) ? (*func_ptr = &head_left) : (0);
+	(i == 2) ? (*func_ptr = &head_right) : (0);
+	(i == 3) ? (*func_ptr = &move_up) : (0);
+	(i == 4) ? (*func_ptr = &move_down) : (0);
+	(i == 5) ? (*func_ptr = &head_up) : (0);
+	(i == 6) ? (*func_ptr = &head_down) : (0);
+	(i == 7) ? (*func_ptr = &head_restore) : (0);
+	(i == 8) ? (*func_ptr = &more_rot) : (0);
+	(i == 9) ? (*func_ptr = &less_rot) : (0);
+	(i == 10) ? (*func_ptr = &speed_up) : (0);
+	(i == 11) ? (*func_ptr = &speed_down) : (0);
+}
+
+t_functions	*init_func(void)
+{
+	t_functions	*list_func;
+	int			i;
+	int			keycode;
+	void		(*func_ptr)(t_infos_mlx *infos_mlx);
+
+	i = 0;
+	list_func = NULL;
+	while (i < 12)
+	{
+		get_func(&func_ptr, i);
+		keycode = get_keycode(i);
+		if ((push_func(&list_func, keycode, func_ptr)) == FAILED)
+			return (NULL);
+		i = i + 1;
+	}
+	return (list_func);
+}
+#include <stdlib.h>
+#include "wolf.h"
+
+static t_map	*create_elem(char *str, int line)
+{
+	t_map		*new;
+
+	new = NULL;
+	if ((new = (t_map*)malloc(sizeof(*new))))
+	{
+		new->line = line;
+		new->str = str;
+		new->next = NULL;
+	}
+	return (new);
+}
+
+int		push_map(t_map **map, char *str, int line)
+{
+	t_map		*tmp;
+
+	tmp = *map;
+	if (tmp)
+	{
+		while (tmp->next)
+			tmp = tmp->next;
+		if ((tmp->next = create_elem(str, line)))
+			return (0);
+	}
+	else
+		if ((*map = create_elem(str, line)))
+			return (0);
+	ft_puterror(ALLOC_ERROR);
+	return (FAILED);
+}
+
+void		free_list(t_map *list)
+{
+	t_map		*tmp;
+
+	while (list)
+	{
+		tmp = list;
+		list = list->next;
+		free(tmp);
+	}
+}
+#include <stdlib.h>
+#include "mlx.h"
+#include "wolf.h"
+
+static int	init_infos_mlx(t_infos_mlx **infos_mlx)
+{
+	if (((*infos_mlx)->mlx_ptr = mlx_init()) == NULL)
+		return (ft_puterror(MLX_ERROR));
+	if (((*infos_mlx)->win_ptr = mlx_new_window((*infos_mlx)->mlx_ptr,
+					WIDTH, HEIGHT, WINDOW_TITLE)) == NULL)
+		return (ft_puterror(MLX_ERROR));
+	if (((*infos_mlx)->img = mlx_new_image((*infos_mlx)->mlx_ptr,
+					WIDTH, HEIGHT)) == NULL)
+		return (ft_puterror(MLX_ERROR));
+	(*infos_mlx)->data = mlx_get_data_addr((*infos_mlx)->img,
+			&((*infos_mlx)->bpp), &((*infos_mlx)->sizeline), 
+			&((*infos_mlx)->endian));
+	return (0);
+}
+
+static void	init_env(t_env *env)
+{
+	env->angle = ANGLE_START;
+	env->x = X_START;
+	env->y = Y_START;
+	env->head = HEAD_START;
+	env->rot_speed = ROT_START;
+	env->walk_speed = WALK_START;
+}
+
+void		disp_img(t_infos_mlx *infos_mlx, int **map, t_env *env)
+{
+	unsigned int	color;
+	int		x;
+	float		dist_wall;
+	float		each_x;
+
+	x = 0;
+	each_x = 0.5;
+	while (x < WIDTH)
+	{
+		dist_wall = find_wall(env, map, each_x, &color);
+		if (dist_wall < 0.5)
+			dist_wall = 0.5;
+		print_line(get_coord(x, 0, x, (HEIGHT / 2) - (HEIGHT / (2 * dist_wall))
+					+ env->head), infos_mlx, SKY_COLOR);
+		print_line(get_coord(x, (HEIGHT / 2) - (HEIGHT / (2 * dist_wall))
+					+ env->head, x, (HEIGHT / 2)
+					+ (HEIGHT / (2 * dist_wall)) + env->head),
+				infos_mlx, color);
+		print_line(get_coord(x, (HEIGHT / 2) + (HEIGHT / (2 * dist_wall)
+						+ env->head), x, HEIGHT),
+				infos_mlx, FLOOR_COLOR);
+		x = x + 1;
+		each_x = each_x - (1.0 / (float)WIDTH);
+	}
+}
+
+int		main(int argc, char **argv)
+{
+	t_infos_mlx	*infos_mlx;
+
+	infos_mlx = NULL;
+	if (is_usage(argc, argv[1]) == 1)
+		return (0);
+	if (((infos_mlx = (t_infos_mlx*)malloc(sizeof(t_infos_mlx))) == NULL)
+			|| ((infos_mlx->env = (t_env*)malloc(sizeof(t_env))) == NULL)
+			|| (infos_mlx->env->list_func = init_func()) == NULL)
+		return (ft_puterror(ALLOC_ERROR));
+	if ((infos_mlx->env->map = get_map(argv[1], infos_mlx->env)) == NULL)
+		return (FAILED);
+	if (is_good_map(infos_mlx, infos_mlx->env->map) == FAILED)
+		return (ft_puterror(MAP_ERROR));
+	if ((init_infos_mlx(&infos_mlx)) == FAILED)
+		return (FAILED);
+	init_env(infos_mlx->env);
+	disp_img(infos_mlx, infos_mlx->env->map, infos_mlx->env);
+	mlx_hook(infos_mlx->win_ptr, KEYPRESS, KEYPRESSMASK, manage_key, infos_mlx);
+	mlx_expose_hook(infos_mlx->win_ptr, manage_expose, infos_mlx);
+	mlx_loop(infos_mlx->mlx_ptr);
+	return (0);
+}
+#include <stdlib.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include "wolf.h"
+
+static int	check_first_last(char *str)
+{
+	int		i;
+
+	i = 0;
+	while (str && str[i])
+	{
+		if (!(i % 2) && str[i] != '1')
+		{
+			ft_puterror("First and last line must be completed with '1'\n");
+			return (FAILED);
+		}
+		if (i % 2 && str[i] != ' ')
+		{
+			ft_puterror("error: caracter must be '0', ' ' or '1'\n");
+			return (FAILED);
+		}
+
+		i = i + 1;
+	}
+	return (0);
+}
+
+static int	check_map(t_map *list_map)
+{
+	t_map			*tmp;
+	unsigned int	nb_col;
+
+	tmp = list_map;
+	if (list_map == NULL)
+		return (ft_puterror(MAP_ERROR));
+	nb_col = ft_strlen(list_map->str);
+	if (check_first_last(list_map->str) == FAILED)
+		return (FAILED);
+	while (tmp)
+	{
+		if (tmp->str[0] == '0' || tmp->str[0] == ' '
+				|| tmp->str[nb_col - 1] == '0' || tmp->str[nb_col - 1] == ' ')
+			return (ft_puterror("map error: No '0' or ' ' on side of map\n"));
+		if (ft_strlen(tmp->str) != nb_col)
+			return (ft_puterror("map error: columns's nbs are different\n"));
+		tmp = tmp->next;
+	}
+	return (0);
+}
+
+static int		**save_map(t_map *list_map, int nb_line, int nb_col, int i)
+{
+	int		**map;
+	t_map	*tmp;
+	int		j;
+	int		z;
+
+	if ((map = (int**)malloc(sizeof(int*) * (nb_line + 1))) == NULL)
+		return (NULL);
+	tmp = list_map;
+	while (tmp)
+	{
+		z = 0;
+		j = 0;
+		if ((map[i] = (int*)malloc(sizeof(int) * nb_col)) == NULL)
+			return (NULL);
+		while (j < nb_col)
+		{
+			map[i][j] = (tmp->str[z] != ' ' && tmp->str[z] != '0') ? (1) : (0);
+			z = z + 2;
+			j = j + 1;
+		}
+		i = i + 1;
+		tmp = tmp->next;
+	}
+	map[i] = NULL;
+	return (map);
+}
+
+static int		get_nb_line(t_map *list)
+{
+	int		i;
+	t_map		*tmp;
+
+	i = 0;
+	tmp = list;
+	while (tmp)
+	{
+		i = i + 1;
+		tmp = tmp->next;
+	}
+	return (i);
+}
+
+int				**get_map(char *filename, t_env *env)
+{
+	int			i;
+	int			fd;
+	int			**map;
+	t_map		*list_map;
+	char		*tmp;
+
+	i = 0;
+	list_map = NULL;
+	if ((fd = open(filename, O_RDONLY)) == FAILED)
+	{
+		ft_puterror(FILE_ERROR);
+		return (NULL);
+	}
+	while ((tmp = get_next_line(fd)))
+		if ((push_map(&list_map, tmp, i++)) == FAILED)
+			return (NULL);
+	if (check_map(list_map) == FAILED)
+		return (NULL);
+	if ((map = save_map(list_map, i, (ft_strlen(list_map->str) + 1) / 2, 0))
+			== NULL)
+		ft_puterror(ALLOC_ERROR);
+	env->size_x = (ft_strlen(list_map->str) + 1) / 2;
+	env->size_y = get_nb_line(list_map);
+	free_list(list_map);
+	return (map);
+}
+
+#include "wolf.h"
+
+void	head_up(t_infos_mlx *infos_mlx)
+{
+	if (infos_mlx->env->head <= 200)
+	{
+		infos_mlx->env->head = infos_mlx->env->head + 5;
+		disp_img(infos_mlx, infos_mlx->env->map, infos_mlx->env);
+		manage_expose(infos_mlx);
+	}
+}
+
+void	head_down(t_infos_mlx *infos_mlx)
+{
+	if (infos_mlx->env->head >= -200)
+	{
+		infos_mlx->env->head = infos_mlx->env->head - 5;
+		disp_img(infos_mlx, infos_mlx->env->map, infos_mlx->env);
+		manage_expose(infos_mlx);
+	}
+}
+
+void	head_restore(t_infos_mlx *infos_mlx)
+{
+	if (infos_mlx->env->head != 0)
+	{
+		if ((infos_mlx->env->head > 0 && infos_mlx->env->head < 25)
+				|| (infos_mlx->env->head < 0 && infos_mlx->env->head > -25))
+			infos_mlx->env->head = 0;
+		else if (infos_mlx->env->head > 0)
+			infos_mlx->env->head = infos_mlx->env->head - 25;
+		else
+			infos_mlx->env->head = infos_mlx->env->head + 25;
+		infos_mlx->env->head = infos_mlx->env->head - 1;
+		disp_img(infos_mlx, infos_mlx->env->map, infos_mlx->env);
+		manage_expose(infos_mlx);
+	}
+}
+
+void	more_rot(t_infos_mlx *infos_mlx)
+{
+	if (infos_mlx->env->rot_speed + 5 < 100)
+	{
+		infos_mlx->env->rot_speed = infos_mlx->env->rot_speed + 5;
+		manage_expose(infos_mlx);
+	}
+}
+
+void	less_rot(t_infos_mlx *infos_mlx)
+{
+	if (infos_mlx->env->rot_speed - 5 > 0)
+	{
+		infos_mlx->env->rot_speed = infos_mlx->env->rot_speed - 5;
+		manage_expose(infos_mlx);
+	}
+}
+#include <stddef.h>
+#include "mlx.h"
+#include "wolf.h"
+
+t_line		get_coord(int x1, int y1, int x2, int y2)
+{
+	t_line	coord;
+
+	coord.x1 = x1;
+	coord.x2 = x2;
+	coord.y1 = y1;
+	coord.y2 = y2;
+	return (coord);
+}
+
+static void		my_pixel_put_to_image(int x, int y,
+		unsigned int color,
+		t_infos_mlx *infos_mlx)
+{
+	void		*mlx_ptr;
+	size_t	pixel_ptr;
+
+	mlx_ptr = infos_mlx->mlx_ptr;
+	if (y <= HEIGHT && y >= 0 && x >= 0 && x <= WIDTH)
+	{
+		pixel_ptr = ((WIDTH * y) + x) * (infos_mlx->bpp / 8);
+		color = mlx_get_color_value(mlx_ptr, color);
+		if (infos_mlx->endian == 0)
+		{
+			(infos_mlx->data + pixel_ptr)[2] = color >> 16;
+			(infos_mlx->data + pixel_ptr)[1] = (color & 0x00FF00) >> 8;
+			(infos_mlx->data + pixel_ptr)[0] = color & 0x0000FF;
+		}
+		else
+		{
+			(infos_mlx->data + pixel_ptr)[0] = color >> 16;
+			(infos_mlx->data + pixel_ptr)[1] = (color & 0x00FF00) >> 8;
+			(infos_mlx->data + pixel_ptr)[2] = color & 0x0000FF;
+		}
+	}
+}
+
+void	print_line(t_line c, t_infos_mlx *infos_mlx, unsigned int color)
+{
+	int	tmp;
+
+	if (transform_coord(&c) == FAILED)
+		return ;
+	if ((c.x1 <= c.x2) && ((c.x2 - c.x1) >= val_abs(c.y2 - c.y1)))
+	{
+		tmp = c.x1;
+		while (tmp <= c.x2)
+		{
+			my_pixel_put_to_image(tmp, c.y1 + ((c.y2 - c.y1) * (tmp - c.x1))
+					/ (c.x2 - c.x1), color, infos_mlx);
+			tmp = tmp + 1;
+		}
+		return ;
+	}
+	(c.y1 > c.y2) ? (swap_int(&(c.x1), &(c.x2))) : (0);
+	(c.y1 > c.y2) ? (swap_int(&(c.y1), &(c.y2))) : (0);
+	tmp = c.y1;
+	while (tmp < c.y2)
+	{
+		my_pixel_put_to_image(c.x1 + ((c.x2 - c.x1) * (tmp - c.y1))
+				/ (c.y2 - c.y1), tmp, color, infos_mlx);
+		tmp = tmp + 1;
+	}
+}
+
+int	transform_coord(t_line *c)
+{
+	if (c->x1 == c->x2 && c->y1 == c->y2)
+		return (FAILED);
+	(c->x1 > c->x2) ? (swap_int(&(c->y1), &(c->y2))) : (0);
+	(c->x1 > c->x2) ? (swap_int(&(c->x1), &(c->x2))) : (0);
+	return (0);
+}
+#include <unistd.h>
+#include "wolf.h"
+
+int				ft_puterror(char *str)
+{
+	unsigned int	i;
+
+	i = 0;
+	if (str == NULL)
+		return (FAILED);
+	while (str[i])
+		write(2, &str[i++], 1);
+	return (FAILED);
+}
+
+void			ft_putstr(char *str)
+{
+	unsigned int	i;
+
+	i = 0;
+	if (str == NULL)
+		return ;
+	while (str[i])
+		write(1, &str[i++], 1);
+}
+
+unsigned int	ft_strlen(char *str)
+{
+	unsigned int	i;
+
+	i = 0;
+	if (str == NULL)
+		return (0);
+	while (str[i])
+		i = i + 1;
+	return (i);
+}
+
+void			swap_int(int *a, int *b)
+{
+	int		tmp;
+
+	tmp = *a;
+	*a = *b;
+	*b = tmp;
+}
+
+int				val_abs(int nb)
+{
+	if (nb < 0)
+		return (-nb);
+	return (nb);
+}

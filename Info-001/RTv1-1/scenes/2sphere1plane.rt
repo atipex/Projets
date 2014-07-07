@@ -1,0 +1,66 @@
+camera :
+	{
+		position : 0 0 -1400,
+		rotation : 0 0 0
+	}
+objects :
+	{
+		sphere :
+			{
+				position : 40 0 0,
+				radius : 60,
+				rotation : 0 0 0,
+				material :
+					{
+						color : 255 102 102,
+						ambiant : 0.2,
+						diffuse : 0.3,
+						specular : 0.4,
+						phong : 5
+					}
+			},
+		sphere :
+			{
+				position : -40 0 0,
+				radius : 60,
+				rotation : 0 0 0,
+				material :
+					{
+						color : 100 102 255,
+						ambiant : 0.2,
+						diffuse : 0.3,
+						specular : 0.4,
+						phong : 5
+					}
+			},
+		plane :
+			{
+				position : 0 -120 0,
+				rotation : 0 0 0,
+				material :
+					{
+						color : 0 255 102,
+						ambiant : 0.1,
+						diffuse : 0.4,
+						specular : 0.5,
+						phong : 2
+					}
+			}
+	}
+lights :
+	{
+		point :
+			{
+				position : -100 -100 -300,
+				rotation : 0 0 0,
+				color : 255 255 50,
+				intensity : 1
+			},
+		point :
+			{
+				position : 100 -100 -300,
+				rotation : 0 0 0,
+				color : 50 255 255,
+				intensity : 1
+			}
+	}

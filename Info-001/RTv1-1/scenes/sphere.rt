@@ -1,0 +1,32 @@
+camera :
+	{
+		position : 0 0 -1400,
+		rotation : 0 0 0
+	}
+objects :
+	{
+		sphere :
+			{
+				position : 0 0 0,
+				radius : 100,
+				rotation : 0 0 0,
+				material :
+					{
+						color : 204 0 204,
+						ambiant : 0.3,
+						diffuse : 0.4,
+						specular : 0.3,
+						phong : 5
+					}
+			}
+	}
+lights :
+	{
+		point :
+			{
+				position : 0 0 -200,
+				rotation : 0 0 0,
+				color : 255 255 255,
+				intensity : 1
+			}
+	}

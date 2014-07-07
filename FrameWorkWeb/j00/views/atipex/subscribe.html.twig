@@ -1,0 +1,56 @@
+{% extends "atipexBundle::layout.html.twig" %}
+{% block title %}
+Register - {{ parent() }}
+{% endblock %}
+
+{% block Atipex_body %}
+<form class="form-horizontal" method="POST" action="add">
+<fieldset>
+<legend>Register</legend>
+<div class="control-group">
+  <label class="control-label" for="mail">E-mail</label>
+  <div class="controls">
+    <input id="mail" name="mail" placeholder="Email" class="input-medium" type="text">
+  </div>
+</div>
+<div class="control-group">
+  <label class="control-label" for="Login">Login</label>
+  <div class="controls">
+    <input id="Login" name="Login" placeholder="Login" class="input-medium" type="text">
+  </div>
+</div>
+<div class="control-group">
+  <label class="control-label" for="Password">Password</label>
+  <div class="controls">
+    <input id="Password" name="Password" placeholder="Password" class="input-medium" type="password">
+  </div>
+</div>
+<div class="control-group">
+  <label class="control-label" for="Password2">Confirm password</label>
+  <div class="controls">
+    <input id="Password2" name="Password2" placeholder="Password" class="input-medium" type="password">
+  </div>
+</div>
+<div class="control-group">
+  <label class="control-label" for="radios">Gender</label>
+  <div class="controls">
+    <label class="radio inline" for="radios-0">
+      <input name="radios" id="radios-0" value="H" checked="checked" type="radio">
+      H
+    </label>
+    <label class="radio inline" for="radios-1">
+      <input name="radios" id="radios-1" value="F" type="radio">
+      F
+    </label>
+  </div>
+</div>
+  <div class="control-group">
+  <label class="control-label" for="submit"></label>
+  <div class="controls">
+    <button id="submit" name="submit" class="btn btn-primary">Submit</button>
+    <button id="reset" name="reset" type="reset" class="btn btn-inverse">Reset</button>
+  </div>
+</div>
+</fieldset>
+</form>
+{% endblock %}

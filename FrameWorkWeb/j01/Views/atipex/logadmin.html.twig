@@ -1,0 +1,44 @@
+   
+    {% extends "atipexBundle::layout.html.twig" %}
+{% block title %}
+Login - Admin - {{ parent() }}
+{% endblock %}
+
+
+{% block Atipex_body %}
+
+
+<form class="form-horizontal" method="POST" action= "autha">
+<fieldset>
+
+<legend>
+ {% if app.session.get('langue') is empty %}
+            Lost 
+           {% else %}
+  Se connecter
+  {% endif %}
+
+
+- Admin</legend>
+<div class="control-group">
+  <label class="control-label" for="login">Login </label>
+  <div class="controls">
+    <input id="login" name="login" placeholder="Login" class="input-medium" type="text" maxlength="20">
+  </div>
+</div>
+<div class="control-group">
+  <label class="control-label" for="password">Password </label>
+  <div class="controls">
+    <input id="password" name="password" placeholder="Password" class="input-medium" type="password" maxlength="20">
+  </div>
+</div>
+<div class="control-group">
+  <label class="control-label" for="submit"></label>
+  <div class="controls">
+    <button id="submit" name="submit" class="btn btn-primary">Submit</button>
+    <button id="reset" name="reset" type="reset" class="btn btn-inverse">Reset</button>
+  </div>
+</div>
+</fieldset>
+</form>
+{% endblock %}

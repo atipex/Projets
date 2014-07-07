@@ -1,0 +1,30 @@
+admin:
+    pattern:  /
+    defaults: { _controller: "atipexBundle:member:index" }
+
+admin_show:
+    pattern:  /{id}/show
+    defaults: { _controller: "atipexBundle:member:show" }
+
+admin_new:
+    pattern:  /new
+    defaults: { _controller: "atipexBundle:member:new" }
+
+admin_create:
+    pattern:  /create
+    defaults: { _controller: "atipexBundle:member:create" }
+    requirements: { _method: post }
+
+admin_edit:
+    pattern:  /{id}/edit
+    defaults: { _controller: "atipexBundle:member:edit" }
+
+admin_update:
+    pattern:  /{id}/update
+    defaults: { _controller: "atipexBundle:member:update" }
+    requirements: { _method: post|put }
+
+admin_delete:
+    pattern:  /{id}/delete
+    defaults: { _controller: "atipexBundle:member:delete" }
+    requirements: { _method: post|delete }

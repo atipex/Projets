@@ -1,0 +1,57 @@
+{% extends "atipexBundle::layout.html.twig" %}
+
+{% block title %}
+Modify - {{ parent() }}
+{% endblock %}
+
+
+{% block Atipex_body %}
+
+<form class="form-horizontal" method="POST" action="modifa">
+<fieldset>
+<legend>Modify account</legend>
+<div class="control-group">
+  <label class="control-label" for="mail">Email</label>
+  <div class="controls">
+    <input id="mail" name="mail" placeholder="Email" class="input-medium" type="text" onClick= "this.value='';">
+  </div>
+</div>
+<div class="control-group">
+  <label class="control-label" for="oldpassword">Old password</label>
+  <div class="controls">
+    <input id="oldpassword" name="oldpassword" placeholder="Password" class="input-medium" type="password">
+  </div>
+</div>
+<div class="control-group">
+  <label class="control-label" for="newpass">New password</label>
+  <div class="controls">
+    <input id="newpass" name="newpass" placeholder="Password" class="input-medium" type="password">
+  </div>
+</div>
+<div class="control-group">
+  <label class="control-label" for="newpass2">Confirm password</label>
+  <div class="controls">
+    <input id="newpass2" name="newpass2" placeholder="Password" class="input-medium" type="password">
+  </div>
+</div>
+<div class="control-group">
+  <label class="control-label" for="die">Delete this account</label>
+  <div class="controls">
+    <label class="checkbox" for="0">
+      <input name="die" value="0" type="hidden">
+      <input name="die" value="1" type="checkbox">
+      Check this with your old password not empty.
+    </label>
+  </div>
+</div>
+<div class="control-group">
+  <label class="control-label" for="submit"></label>
+  <div class="controls">
+    <button id="submit" name="submit" class="btn btn-primary">Submit</button>
+    <button id="Reset" name="Reset" type="reset"class="btn btn-inverse">Reset</button>
+  </div>
+</div>
+</fieldset>
+</form>
+
+{% endblock %}

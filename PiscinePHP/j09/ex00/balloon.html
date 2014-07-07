@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Balon</title>
+</head>
+<body>
+<script type="text/javascript">
+function size(id,ud){
+	var div=document.getElementById(id);
+	var h=parseInt(div.style.height)+ud;
+	if (h>=1){
+		div.style.height = h + "px";
+	}
+}
+</script>
+<br><br><br><br>
+<br><br><br><br>
+<br><br><br><br>
+<style type="text/css">
+#circle {
+  display: block;
+  background: red;
+  border-radius: 50%;
+  height: 200px;
+  width: 200px;
+  margin: 0;
+}
+</style>
+<center>
+<a onClick = "size('circle', 20);"><div id="circle"></div></a></center>
+</body>
+</html>

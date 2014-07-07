@@ -1,0 +1,54 @@
+{# app/Resources/views/layout.html.twig #}
+<!--{{app.session.start()}} -->
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+  <title>{% block title %}Framework Web {% endblock %}</title>
+  {% block stylesheets %}
+  <link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}" type="text/css" />
+  {% endblock %}
+</head>
+<body>
+  <div class="container">
+    <div id="header" class="hero-unit">
+      <h1>Framework Web 1</h1>
+      {% if app.session.get('langue') is empty %}<p>Second project with Symfony.</p>{% else %}<p>Second projet avec Symfony</p>{% endif %}
+      <p><a class="btn btn-primary btn-large" href="https://intra.42.fr/module/2013/WEB-1-002/PAR-2-1/acti-481/project/">
+        {% if app.session.get('langue') is empty %}Go intra »{% else %}Accéder à l'intra »{% endif %}</a></p>
+      </div>
+      <div class="row">
+        <div id="menu" class="span3">
+          <a href="{{ path('atipex_switsh')}}"> {% if app.session.get('langue') is empty %}French{% else %}Anglais{% endif %}</a>
+          <h3>Menu</h3>
+          <ul class="nav nav-pills nav-stacked">
+            <li><a href="{{ path('atipex_start') }}">{% if app.session.get('langue') is empty %}Homepage{% else %}Accueil{% endif %}</a></li>
+            {% if app.session.get('admin') != 'on' %}
+            {% else %}
+            <li><a href="{{ path('atipex_amail') }}">{% if app.session.get('langue') is empty %}Send mail{% else %} Envoie de mail{% endif %}</a></li>
+            {% endif %}
+            {% if app.session.get('login') is empty %}
+            <li><a href="{{ path('atipex_login') }}">{% if app.session.get('langue') is empty %}Login{% else %}Se connecter{% endif %}</a></li>
+            <li><a href="{{ path('atipex_subscribe') }}">{% if app.session.get('langue') is empty %} Register{% else %}S'enregistrer{% endif %}           </a></li>
+            <li><a href="{{ path('atipex_lost') }}">{% if app.session.get('langue') is empty %}Password lost{% else %}Mot de passe perdu{% endif %}
+            </a></li>
+            {% else %}
+            <li><a href="{{ path('atipex_modif') }}">{% if app.session.get('langue') is empty %}Modify{% else %}Modifier{% endif %}</a></li>
+            <li><a href="{{ path('atipex_logout') }}">{% if app.session.get('langue') is empty %}Logout{% else %}Se déconnecter{% endif %}</a></li>
+            {% endif %}
+          </ul>
+          {{render(controller("atipexBundle:Atipex:menu")) }}
+        </div>
+        <div id="content" class="span9">
+          {% block body %}
+          {% endblock %}
+        </div>
+      </div>
+      <hr>
+      <footer>
+        <i><p align="right">mrebours © 2014 </p></i>
+      </footer>
+    </div>
+  </body>
+  </html>

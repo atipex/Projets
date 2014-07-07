@@ -1,0 +1,26 @@
+{% extends "atipexBundle::layout.html.twig" %}
+
+{% block title %}
+Accueil - {{ parent() }}
+{% endblock %}
+
+{% block Atipex_body %}
+            {% if app.session.get('langue') is  empty %}
+<h2>This is my front page !</h2>
+
+<ul>
+This is my message LOL HEHEHEHEHE
+</ul>
+
+            {% else %}
+
+
+<h2>Ceci est ma première page !</h2>
+
+<ul>
+Ceci est mon message LOL HEHEHEHEHE
+</ul>
+
+            {% endif %}
+
+{% endblock %}

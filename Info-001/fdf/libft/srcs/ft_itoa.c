@@ -1,0 +1,75 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_itoa.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mrebours <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2014/04/27 03:46:19 by mrebours            #+#    #+#             */
+/*   Updated: 2014/04/27 03:46:19 by mrebours           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include <stdlib.h>
+
+static char	*test(char *ret, long n, int len)
+{
+	int		size;
+	int		nbr;
+	int		tmp;
+
+	size = 1;
+	tmp = n;
+	while (tmp / 10 > 0)
+	{
+		size = size * 10;
+		tmp = tmp / 10;
+	}
+	while (size > 0)
+	{
+		nbr = 0;
+		nbr = n / size;
+		ret[len] = ('0' + nbr);
+		len += 1;
+		n = n % size;
+		size = size / 10;
+	}
+	ret[len] = '\0';
+	return (ret);
+}
+
+static int	ret_count(int n, int count)
+{
+	while (n / 10)
+	{
+		n /= 10;
+		count++;
+	}
+	return (count);
+}
+
+char		*ft_itoa(int n)
+{
+	int		len;
+	int		i;
+	int		count;
+	char	*ret;
+
+	if (n == -2147483648)
+		return ("-2147483648");
+	i = n;
+	count = 0;
+	if (n < 0)
+		count += 1;
+	count = ret_count(n, count);
+	if ((ret = (char*)malloc(sizeof(*ret) * (count + 1) + 1)) == NULL)
+		return (NULL);
+	len = 0;
+	if (i < 0)
+	{
+		ret[len] = '-';
+		len += 1;
+		i = i * -1;
+	}
+	return (test(ret, i, len));
+}

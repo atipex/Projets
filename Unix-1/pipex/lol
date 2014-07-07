@@ -1,0 +1,27 @@
+ftp^I^I21/tcp$
+fsp^I^I21/udp^I^Ifspd$
+ssh^I^I22/tcp^I^I^I^I# SSH Remote Login Protocol$
+ssh^I^I22/udp$
+telnet^I^I23/tcp$
+smtp^I^I25/tcp^I^Imail$
+time^I^I37/tcp^I^Itimserver$
+--
+csnet-ns^I105/tcp^I^Icso-ns^I^I# also used by CSO name server$
+csnet-ns^I105/udp^I^Icso-ns$
+rtelnet^I^I107/tcp^I^I^I^I# Remote Telnet$
+rtelnet^I^I107/udp$
+pop2^I^I109/tcp^I^Ipostoffice pop-2 # POP version 2$
+pop2^I^I109/udp^I^Ipop-2$
+--
+ftps-data^I989/tcp^I^I^I^I# FTP over SSL (data)$
+ftps^I^I990/tcp$
+telnets^I^I992/tcp^I^I^I^I# Telnet over SSL$
+telnets^I^I992/udp$
+imaps^I^I993/tcp^I^I^I^I# IMAP over SSL$
+imaps^I^I993/udp$
+--
+csync2^I^I30865/tcp^I^I^I# cluster synchronization tool$
+dircproxy^I57000/tcp^I^I^I# Detachable IRC Proxy$
+tfido^I^I60177/tcp^I^I^I# fidonet EMSI over telnet$
+fido^I^I60179/tcp^I^I^I# fidonet EMSI over TCP$
+$
